@@ -1,8 +1,10 @@
 import { Link, useLocation, useNavigate } from 'react-router'
 import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
-import { toast } from 'react-hot-toast'
+import { toast, Toaster } from 'react-hot-toast'
 import { TbFidgetSpinner } from 'react-icons/tb'
+import { useForm } from "react-hook-form"
+import axios from 'axios';
 
 const SignUp = () => {
   const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth()
@@ -10,39 +12,40 @@ const SignUp = () => {
   const location = useLocation()
   const from = location.state || '/'
 
-  // form submit handler
-  const handleSubmit = async event => {
-    event.preventDefault()
-    const form = event.target
-    const name = form.name.value
-    const email = form.email.value
-    const password = form.password.value
 
-    try {
-      //2. User Registration
-      const result = await createUser(email, password)
+  // react-hook-form
+  const {register, handleSubmit, formState:{errors} }= useForm()
 
-      //3. Save username & profile photo
-      await updateUserProfile(
-        name,
-        'https://lh3.googleusercontent.com/a/ACg8ocKUMU3XIX-JSUB80Gj_bYIWfYudpibgdwZE1xqmAGxHASgdvCZZ=s96-c'
-      )
-      console.log(result)
+const registerUserWithEmail = async (data)=>{
+  const {name, email, image, password}= data;
+  const imageFile = image[0];
+  const formData = new FormData();
+  formData.append("image", imageFile);
+  try {
+    // Send image to imgBB
+    const photoUpload = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, formData);
 
-      navigate(from, { replace: true })
-      toast.success('Signup Successful')
-    } catch (err) {
-      console.log(err)
-      toast.error(err?.message)
-    }
+    // get image URL from imgBB
+    const photo =  photoUpload.data.data.display_url;
+    // create user
+    await createUser(email, password);
+    // update name & photo
+    await updateUserProfile(name, photo);
+    toast.success("signup succesfull")
+    navigate(from, {replace: true});
+
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
+
   }
+}
 
   // Handle Google Signin
   const handleGoogleSignIn = async () => {
     try {
       //User Registration using google
       await signInWithGoogle()
-
       navigate(from, { replace: true })
       toast.success('Signup Successful')
     } catch (err) {
@@ -50,32 +53,39 @@ const SignUp = () => {
       toast.error(err?.message)
     }
   }
+
+
   return (
     <div className='flex justify-center items-center min-h-screen bg-white'>
+      <Toaster/>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
         <div className='mb-8 text-center'>
           <h1 className='my-3 text-4xl font-bold'>Sign Up</h1>
           <p className='text-sm text-gray-400'>Welcome to PlantNet</p>
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(registerUserWithEmail)}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
         >
+          {/* Name field */}
           <div className='space-y-4'>
             <div>
-              <label htmlFor='email' className='block mb-2 text-sm'>
+              <label htmlFor='name' className='block mb-2 text-sm'>
                 Name
               </label>
               <input
                 type='text'
-                name='name'
+                {...register("name", {required: {value: true, message: "Please enter your full name"}, pattern:{value: /^[A-Za-z]+(?:\s[A-Za-z]+)+$/, message: "Please enter your last name"}})}
                 id='name'
                 placeholder='Enter Your Name Here'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
                 data-temp-mail-org='0'
               />
+              {
+                errors.name && <p className='text-sm text-error mt-1'>{errors.name.message}</p>
+              }
             </div>
             {/* Image */}
             <div>
@@ -86,7 +96,7 @@ const SignUp = () => {
                 Profile Image
               </label>
               <input
-                name='image'
+                {...register("image", {required: {value: true, message: "Please upload your image"}})}
                 type='file'
                 id='image'
                 accept='image/*'
@@ -103,21 +113,29 @@ const SignUp = () => {
               <p className='mt-1 text-xs text-gray-400'>
                 PNG, JPG or JPEG (max 2MB)
               </p>
+              {
+                errors.image && <p className='text-sm text-error mt-1'>{errors.image.message}</p>
+              }
             </div>
+            {/* Email field */}
             <div>
               <label htmlFor='email' className='block mb-2 text-sm'>
                 Email address
               </label>
               <input
                 type='email'
-                name='email'
+                {...register("email", {required: {value: true, message: "Please enter your email"}, pattern:{value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Please enter a valid email"}})}
                 id='email'
                 required
                 placeholder='Enter Your Email Here'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
                 data-temp-mail-org='0'
               />
+              {
+                errors.email && <p className='text-sm text-error mt-1'>{errors.email.message}</p>
+              }
             </div>
+            {/* Password field */}
             <div>
               <div className='flex justify-between'>
                 <label htmlFor='password' className='text-sm mb-2'>
@@ -126,13 +144,16 @@ const SignUp = () => {
               </div>
               <input
                 type='password'
-                name='password'
+                {...register("password", {required: {value: true, message: "Please enter a 8 digit password"}, pattern:{value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/, message: "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character."}})}
                 autoComplete='new-password'
                 id='password'
                 required
                 placeholder='*******'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
               />
+              {
+                errors.password && <p className='text-sm text-error mt-1'>{errors.password.message}</p>
+              }
             </div>
           </div>
 
@@ -169,6 +190,7 @@ const SignUp = () => {
           <Link
             to='/login'
             className='hover:underline hover:text-lime-500 text-gray-600'
+            state={from}
           >
             Login
           </Link>

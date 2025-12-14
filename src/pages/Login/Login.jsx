@@ -4,7 +4,7 @@ import LoadingSpinner from '../../components/Shared/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
 import { FcGoogle } from 'react-icons/fc'
 import { TbFidgetSpinner } from 'react-icons/tb'
-
+import {useForm} from 'react-hook-form'
 const Login = () => {
   const { signIn, signInWithGoogle, loading, user, setLoading } = useAuth()
   const navigate = useNavigate()
@@ -12,15 +12,20 @@ const Login = () => {
 
   const from = location.state || '/'
 
+  // react-hook form
+  const {register, handleSubmit, formState:{errors}}= useForm();
+
+
+
+
+
+
   if (loading) return <LoadingSpinner />
   if (user) return <Navigate to={from} replace={true} />
 
   // form submit handler
-  const handleSubmit = async event => {
-    event.preventDefault()
-    const form = event.target
-    const email = form.email.value
-    const password = form.password.value
+  const loginWithEmail = async (data) => {
+    const {email, password}= data;
 
     try {
       //User Login
@@ -29,7 +34,8 @@ const Login = () => {
       navigate(from, { replace: true })
       toast.success('Login Successful')
     } catch (err) {
-      console.log(err)
+      // console.log(err)
+      setLoading(false)
       toast.error(err?.message)
     }
   }
@@ -57,11 +63,12 @@ const Login = () => {
           </p>
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(loginWithEmail)}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
         >
+          {/* email field */}
           <div className='space-y-4'>
             <div>
               <label htmlFor='email' className='block mb-2 text-sm'>
@@ -69,13 +76,16 @@ const Login = () => {
               </label>
               <input
                 type='email'
-                name='email'
+                {...register("email", {required: {value: true, message: "Please enter your email"}})}
                 id='email'
                 required
                 placeholder='Enter Your Email Here'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
                 data-temp-mail-org='0'
               />
+              {
+                errors.email && <p className='text-sm text-error mt-1'>{errors.email.message}</p>
+              }
             </div>
             <div>
               <div className='flex justify-between'>
@@ -85,13 +95,16 @@ const Login = () => {
               </div>
               <input
                 type='password'
-                name='password'
+                {...register("password", {required: {value: true, message: "Please enter your password"}})}
                 autoComplete='current-password'
                 id='password'
                 required
                 placeholder='*******'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
               />
+              {
+                errors.password && <p className='text-sm text-error mt-1'>{errors.password.message}</p>
+              }
             </div>
           </div>
 
