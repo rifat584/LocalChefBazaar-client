@@ -1,5 +1,27 @@
 import { Dialog, DialogTitle, DialogPanel } from '@headlessui/react'
+import axios from 'axios';
+import useAuth from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
+
 const BecomeSellerModal = ({ closeModal, isOpen }) => {
+  const {user}= useAuth();
+
+  const roleData = {
+  userName: user?.displayName,
+  userEmail: user?.email,
+  requestType: 'chef',
+  requestStatus: 'pending',
+  requestTime: new Date().toISOString(),
+}
+
+  const handleChefRole = async ()=>{
+    console.log("clicked");
+    const updateRoleRequest = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/roles`, roleData)
+    console.log(updateRoleRequest);
+    closeModal()
+
+    
+  }
   return (
     <Dialog
       open={isOpen}
@@ -28,6 +50,7 @@ const BecomeSellerModal = ({ closeModal, isOpen }) => {
             <div className='flex mt-2 justify-around'>
               <button
                 type='button'
+                onClick={handleChefRole}
                 className='cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
               >
                 Continue

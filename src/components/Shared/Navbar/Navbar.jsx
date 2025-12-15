@@ -16,7 +16,8 @@ const Navbar = () => {
           <div className='flex flex-row  items-center justify-between gap-3 md:gap-0'>
             {/* Logo */}
             <Link to='/'>
-              <img src={logo} alt='logo' width='100' height='100' />
+              {/* <img src={logo} alt='logo' width='100' height='100' /> */}
+              LocalChefBazaar
             </Link>
             {/* Dropdown Menu */}
             <div className='relative'>
