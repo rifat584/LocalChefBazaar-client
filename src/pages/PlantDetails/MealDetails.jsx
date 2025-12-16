@@ -1,0 +1,177 @@
+import Container from "../../components/Shared/Container";
+import Heading from "../../components/Shared/Heading";
+import Button from "../../components/Shared/Button/Button";
+import PurchaseModal from "../../components/Modal/PurchaseModal";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router";
+import queryFetch from "../../utilitis/queryFetch";
+import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
+
+const MealDetails = () => {
+  let [isOpen, setIsOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+  const { id } = useParams();
+  console.log(id);
+  // tanstack query
+  const { data, isLoading } = useQuery({
+    queryKey: ["meal", id],
+    queryFn: async () => {
+      const meal = await queryFetch(`meal/${id}`);
+      // const chef = await queryFetch(``)
+      return meal;
+    },
+  });
+
+  if (isLoading) return <LoadingSpinner />;
+  console.log(data);
+  const {
+    foodName,
+    chefName,
+    ingredients,
+    chefExperience,
+    estimatedDeliveryTime,
+    foodImage,
+    price,
+    rating,
+  } = data;
+
+  return (
+    <Container>
+      <div className="max-w-5xl mx-auto">
+        <div className="card lg:card-side bg-base-100 shadow-xl">
+          <figure className="lg:w-1/2">
+            <img
+              src={foodImage}
+              alt={foodName}
+              className="w-full h-full object-cover"
+            />
+          </figure>
+
+          <div className="card-body">
+            <div className="flex justify-between items-start">
+              <Heading title={foodName}></Heading>
+              <button className="btn btn-circle btn-outline hover:btn-primary btn-sm p-0 leading-none flex items-center justify-center">
+                <FaRegStar className="text-xl" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4 my-2">
+              <div className="text-2xl font-bold px-4 py-3 flex">
+                {/* <FaBangladeshiTakaSign /> */}
+                {price} TK
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="text-warning">
+                  <FaStar className="text-xl p-0 m-0"/>
+                </div>
+                <span className="font-semibold text-xl">{rating}</span>
+              </div>
+            </div>
+
+            <div className="divider my-1"></div>
+
+            <div className="space-y-3">
+              <div>
+                <h3 className="font-bold mb-2">Ingredients</h3>
+                <div className="flex flex-wrap gap-2">
+                  {ingredients.map((item, i) => (
+                    <div key={i} className="badge badge-lg bg-base-200 shadow-sm">
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="stats shadow w-full">
+                <div className="stat p-3">
+                  <div className="stat-title text-xs">Delivery Time</div>
+                  <div className="stat-value text-lg">
+                    {estimatedDeliveryTime.minTime}-
+                    {estimatedDeliveryTime.maxTime} min
+                  </div>
+                </div>
+                <div className="stat p-3">
+                  <div className="stat-title text-xs">Area</div>
+                  <div className="stat-value text-lg">deliveryArea</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
+                
+                <div>
+                  <p className="font-bold">{chefName}</p>
+                  <p className="text-xs opacity-70">{chefExperience} years</p>
+                  <p className="text-xs opacity-70">{"chefId"} years</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="card-actions justify-end mt-4">
+              <Button label={"Order Now"} onClick={() => setIsOpen(true)}></Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <h2 className="text-3xl font-bold mb-6">Customer Reviews</h2>
+
+          <div className="card bg-base-100 shadow-xl max-w-2xl mx-auto">
+            <div className="card-body">
+              <div className="flex items-start gap-4">
+                <div className="avatar">
+                  <div className="w-16 rounded-full">
+                    <img
+                      src="https://i.ibb.co/sample-user.jpg"
+                      alt="Ariana Sultana"
+                    />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-bold text-lg">Ariana Sultana</h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="rating rating-sm">
+                          {[...Array(5)].map((_, i) => (
+                            <input
+                              key={i}
+                              type="radio"
+                              className="mask mask-star-2 bg-warning"
+                              checked={i < 5}
+                              readOnly
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm font-semibold">5.0</span>
+                      </div>
+                    </div>
+                    <span className="text-sm opacity-60">
+                      {new Date("2025-01-15T12:45:00Z").toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-base">
+                    The food was delicious! Perfect taste and fast delivery.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-center mt-6">
+            <button className="btn btn-primary">Write a Review</button>
+          </div>
+        </div>
+      </div>
+
+      <PurchaseModal isOpen={isOpen} closeModal={closeModal} />
+    </Container>
+  );
+};
+
+export default MealDetails;

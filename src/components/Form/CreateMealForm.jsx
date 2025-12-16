@@ -3,7 +3,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import uploadImage from "../../utilitis/uploadImage";
 import { toast, Toaster } from "react-hot-toast";
-const AddMealForm = () => {
+const CreateMealForm = () => {
   const { user } = useAuth();
   const {
     register,
@@ -226,7 +226,7 @@ const AddMealForm = () => {
               <label className="block text-gray-600">Chef ID</label>
               <input
                 type="text"
-                name="chefId"
+                {...register("chefId", {})}
                 value={"chefId"} // from backend/admin approval
                 readOnly
                 className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed"
@@ -279,4 +279,4 @@ const AddMealForm = () => {
   );
 };
 
-export default AddMealForm;
+export default CreateMealForm;

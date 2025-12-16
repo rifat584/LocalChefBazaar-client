@@ -1,46 +1,52 @@
-import Home from '../pages/Home/Home'
-import ErrorPage from '../pages/ErrorPage'
-import Login from '../pages/Login/Login'
-import SignUp from '../pages/SignUp/SignUp'
-import PlantDetails from '../pages/PlantDetails/PlantDetails'
-import PrivateRoute from './PrivateRoute'
-import DashboardLayout from '../layouts/DashboardLayout'
-import ManageUsers from '../pages/Dashboard/Admin/ManageUsers'
-import Profile from '../pages/Dashboard/Common/Profile'
-import Statistics from '../pages/Dashboard/Common/Statistics'
-import MainLayout from '../layouts/MainLayout'
-import MyInventory from '../pages/Dashboard/Seller/MyInventory'
-import ManageOrders from '../pages/Dashboard/Seller/ManageOrders'
-import MyOrders from '../pages/Dashboard/Customer/MyOrders'
-import { createBrowserRouter } from 'react-router'
-import AddMeal from '../pages/Dashboard/Seller/AddMeal'
+import Home from "../pages/Home/Home";
+import ErrorPage from "../pages/ErrorPage";
+import Login from "../pages/Login/Login";
+import SignUp from "../pages/SignUp/SignUp";
+import PrivateRoute from "./PrivateRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
+import Profile from "../pages/Dashboard/Common/Profile";
+import Statistics from "../pages/Dashboard/Common/Statistics";
+import MainLayout from "../layouts/MainLayout";
+import MyInventory from "../pages/Dashboard/Seller/MyMeals";
+import ManageOrders from "../pages/Dashboard/Seller/OrderRequests";
+import MyOrders from "../pages/Dashboard/Customer/MyOrders";
+import { createBrowserRouter } from "react-router";
+import MealDetails from "../pages/PlantDetails/MealDetails";
+import ManageRequest from "../pages/Dashboard/Admin/ManageRequest";
+import CreateMeal from "../pages/Dashboard/Seller/CreateMeal";
+import OrderRequests from "../pages/Dashboard/Seller/OrderRequests";
+import MyMeals from "../pages/Dashboard/Seller/MyMeals";
+import MyReview from "../pages/Dashboard/Customer/MyReview";
+import FavoriteMeal from "../pages/Dashboard/Customer/FavoriteMeal";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Home />,
       },
       {
-        path: '/plant/:id',
-        element: <PlantDetails />,
+        path: "/meal/:id",
+        element: <MealDetails />,
       },
     ],
   },
-  { path: '/login', element: <Login /> },
-  { path: '/signup', element: <SignUp /> },
+  { path: "/login", element: <Login /> },
+  { path: "/signup", element: <SignUp /> },
   {
-    path: '/dashboard',
+    path: "/dashboard",
     element: (
       <PrivateRoute>
         <DashboardLayout />
       </PrivateRoute>
     ),
     children: [
+      // common
       {
         index: true,
         element: (
@@ -49,24 +55,40 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: 'add-meal',
+            {
+        path: "profile",
         element: (
           <PrivateRoute>
-           <AddMeal/>
+            <Profile />
+          </PrivateRoute>
+        ),
+      },
+      // seller
+      {
+        path: "create-meal",
+        element: (
+          <PrivateRoute>
+            <CreateMeal />
           </PrivateRoute>
         ),
       },
       {
-        path: 'my-inventory',
+        path: "my-meals",
         element: (
           <PrivateRoute>
-            <MyInventory />
+            <MyMeals />
           </PrivateRoute>
         ),
       },
       {
-        path: 'manage-users',
+        path: "order-requests",
+        element: <PrivateRoute>
+          <OrderRequests />
+        </PrivateRoute>,
+      },
+      // Admin 
+      {
+        path: "manage-users",
         element: (
           <PrivateRoute>
             <ManageUsers />
@@ -74,15 +96,16 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'profile',
+        path: "manage-request",
         element: (
           <PrivateRoute>
-            <Profile />
+            <ManageRequest />
           </PrivateRoute>
         ),
       },
+      // user
       {
-        path: 'my-orders',
+        path: "my-orders",
         element: (
           <PrivateRoute>
             <MyOrders />
@@ -90,9 +113,21 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'manage-orders',
-        element: <ManageOrders />,
+        path: "my-review",
+        element: (
+          <PrivateRoute>
+            <MyReview />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "favorite-meal",
+        element: (
+          <PrivateRoute>
+            <FavoriteMeal />
+          </PrivateRoute>
+        ),
       },
     ],
   },
-])
+]);

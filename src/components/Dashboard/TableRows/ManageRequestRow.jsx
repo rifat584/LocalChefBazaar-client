@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import UpdateUserRoleModal from '../../Modal/UpdateUserRoleModal'
 
-const UserDataRow = () => {
+const ManageRequestRow = () => {
   let [isOpen, setIsOpen] = useState(false)
   const closeModal = () => setIsOpen(false)
   return (
@@ -28,14 +28,11 @@ const UserDataRow = () => {
           <span className='relative'>Update Role</span>
         </span>
         {/* Modal */}
-        <UpdateUserRoleModal
-          isOpen={isOpen}
-          closeModal={closeModal}
-          role='customer'
-        />
+        <button>Accept</button>
+        <button>Reject</button>
       </td>
     </tr>
   )
 }
 
-export default UserDataRow
+export default ManageRequestRow

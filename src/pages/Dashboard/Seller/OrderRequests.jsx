@@ -1,6 +1,6 @@
 import SellerOrderDataRow from '../../../components/Dashboard/TableRows/SellerOrderDataRow'
 
-const ManageOrders = () => {
+const OrderRequests = () => {
   return (
     <>
       <div className='container mx-auto px-4 sm:px-8'>
@@ -67,4 +67,4 @@ const ManageOrders = () => {
   )
 }
 
-export default ManageOrders
+export default OrderRequests
