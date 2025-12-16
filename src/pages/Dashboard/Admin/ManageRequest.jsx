@@ -1,7 +1,22 @@
 import React from "react";
 import ManageRequestRow from "../../../components/Dashboard/TableRows/ManageRequestRow";
+import useAuth from "../../../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import queryFetch from "../../../utilitis/queryFetch";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const ManageRequest = () => {
+  const { user } = useAuth();
+  const { data, isLoading } = useQuery({
+    queryKey: ["user", user?.email],
+    queryFn: async () => {
+      const userRoles = await queryFetch(`roles`);
+      return userRoles;
+    },
+  });
+  if (isLoading) return <LoadingSpinner />;
+
+  console.log(data);
   return (
     <div className="container mx-auto px-4 sm:px-8">
       <div className="py-8">
@@ -38,7 +53,11 @@ const ManageRequest = () => {
                 </tr>
               </thead>
               <tbody>
-                <ManageRequestRow/>
+                {
+                  data.map(userRole=>
+                    <ManageRequestRow userRole={userRole} key={userRole._id}/>
+                  )
+                }
               </tbody>
             </table>
           </div>

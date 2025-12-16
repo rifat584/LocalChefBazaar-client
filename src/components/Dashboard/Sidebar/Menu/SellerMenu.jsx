@@ -1,17 +1,21 @@
 import { BsFillHouseAddFill } from 'react-icons/bs'
-import { MdHomeWork, MdOutlineManageHistory } from 'react-icons/md'
+import { MdHomeWork } from 'react-icons/md'
+import { MdAddBusiness } from "react-icons/md";
+import { IoFastFoodSharp } from "react-icons/io5";
+import { PiChefHatFill } from "react-icons/pi";
+
 import MenuItem from './MenuItem'
 const SellerMenu = () => {
   return (
     <>
       <MenuItem
-        icon={BsFillHouseAddFill}
+        icon={PiChefHatFill}
         label='Create Meal'
         address='create-meal'
       />
-      <MenuItem icon={MdHomeWork} label='My Meals' address='my-meals' />
+      <MenuItem icon={IoFastFoodSharp} label='My Meals' address='my-meals' />
       <MenuItem
-        icon={MdOutlineManageHistory}
+        icon={MdAddBusiness}
         label='Order Requests'
         address='order-requests'
       />

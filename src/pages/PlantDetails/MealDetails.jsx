@@ -9,6 +9,7 @@ import queryFetch from "../../utilitis/queryFetch";
 import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
+import useAuth from "../../hooks/useAuth";
 
 const MealDetails = () => {
   let [isOpen, setIsOpen] = useState(false);
@@ -17,29 +18,36 @@ const MealDetails = () => {
     setIsOpen(false);
   };
   const { id } = useParams();
-  console.log(id);
-  // tanstack query
-  const { data, isLoading } = useQuery({
+  const { user } = useAuth();
+
+  // LOAD MEAL
+  const { data: mealData, isLoading: isMealLoading } = useQuery({
     queryKey: ["meal", id],
-    queryFn: async () => {
-      const meal = await queryFetch(`meal/${id}`);
-      // const chef = await queryFetch(``)
-      return meal;
-    },
+    enabled: !!id,
+    queryFn: () => queryFetch(`meal/${id}`),
   });
 
-  if (isLoading) return <LoadingSpinner />;
-  console.log(data);
+  // LOAD USER
+  const { data: userData, isLoading: userDataLoading } = useQuery({
+    queryKey: ["user", user?.email],
+    enabled: !!user?.email,
+    queryFn: () => queryFetch(`user/${user.email}`),
+  });
+
+  if (isMealLoading) return <LoadingSpinner />;
+  if (userDataLoading) return <LoadingSpinner />;
+
   const {
     foodName,
     chefName,
+    chefId,
     ingredients,
     chefExperience,
     estimatedDeliveryTime,
     foodImage,
     price,
     rating,
-  } = data;
+  } = mealData;
 
   return (
     <Container>
@@ -68,7 +76,7 @@ const MealDetails = () => {
               </div>
               <div className="flex items-center gap-1">
                 <div className="text-warning">
-                  <FaStar className="text-xl p-0 m-0"/>
+                  <FaStar className="text-xl p-0 m-0" />
                 </div>
                 <span className="font-semibold text-xl">{rating}</span>
               </div>
@@ -81,7 +89,10 @@ const MealDetails = () => {
                 <h3 className="font-bold mb-2">Ingredients</h3>
                 <div className="flex flex-wrap gap-2">
                   {ingredients.map((item, i) => (
-                    <div key={i} className="badge badge-lg bg-base-200 shadow-sm">
+                    <div
+                      key={i}
+                      className="badge badge-lg bg-base-200 shadow-sm"
+                    >
                       {item}
                     </div>
                   ))}
@@ -98,22 +109,26 @@ const MealDetails = () => {
                 </div>
                 <div className="stat p-3">
                   <div className="stat-title text-xs">Area</div>
-                  <div className="stat-value text-lg">deliveryArea</div>
+                  <div className="stat-value text-lg">{userData.address}</div>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
-                
                 <div>
                   <p className="font-bold">{chefName}</p>
-                  <p className="text-xs opacity-70">{chefExperience} years</p>
-                  <p className="text-xs opacity-70">{"chefId"} years</p>
+                  <p className="text-xs opacity-70">
+                    Experience: {chefExperience} years
+                  </p>
+                  <p className="text-xs opacity-70">ID: {chefId} years</p>
                 </div>
               </div>
             </div>
 
             <div className="card-actions justify-end mt-4">
-              <Button label={"Order Now"} onClick={() => setIsOpen(true)}></Button>
+              <Button
+                label={"Order Now"}
+                onClick={() => setIsOpen(true)}
+              ></Button>
             </div>
           </div>
         </div>
@@ -127,7 +142,7 @@ const MealDetails = () => {
                 <div className="avatar">
                   <div className="w-16 rounded-full">
                     <img
-                      src="https://i.ibb.co/sample-user.jpg"
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFLA5gZ352Mtmj5OMlzW9FEIVV5n3dDbSgeg&s"
                       alt="Ariana Sultana"
                     />
                   </div>

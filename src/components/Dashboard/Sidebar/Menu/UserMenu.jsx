@@ -1,5 +1,9 @@
-import { BsFingerprint } from 'react-icons/bs'
-import { GrUserAdmin } from 'react-icons/gr'
+
+import { MdReviews } from "react-icons/md";
+import { BsCalendarHeartFill } from "react-icons/bs";
+import { PiListNumbersFill } from "react-icons/pi";
+import { IoMdPersonAdd } from "react-icons/io";
+
 import MenuItem from './MenuItem'
 import { useState } from 'react'
 import BecomeSellerModal from '../../../Modal/BecomeSellerModal'
@@ -12,13 +16,15 @@ const UserMenu = () => {
 
   return (
     <>
-      <MenuItem icon={BsFingerprint} label='My Orders' address='my-orders' />
+      <MenuItem icon={PiListNumbersFill} label='My Orders' address='my-orders' />
+      <MenuItem icon={MdReviews} label='My Review' address='my-review' />
+      <MenuItem icon={BsCalendarHeartFill} label='Favorite Meal' address='favorite-meal' />
 
       <div
         onClick={() => setIsOpen(true)}
         className='flex items-center px-4 py-2 mt-5  transition-colors duration-300 transform text-gray-600  hover:bg-gray-300   hover:text-gray-700 cursor-pointer'
       >
-        <GrUserAdmin className='w-5 h-5' />
+        <IoMdPersonAdd className='w-5 h-5' />
 
         <span className='mx-4 font-medium'>Become A Seller</span>
       </div>

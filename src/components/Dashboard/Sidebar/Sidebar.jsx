@@ -7,6 +7,7 @@ import { GrLogout } from 'react-icons/gr'
 import { FcSettings } from 'react-icons/fc'
 import { AiOutlineBars } from 'react-icons/ai'
 import { BsGraphUp } from 'react-icons/bs'
+import { IoStatsChart } from "react-icons/io5";
 
 // User Menu
 import MenuItem from './Menu/MenuItem'
@@ -69,7 +70,7 @@ const Sidebar = () => {
             <nav>
               {/* Common Menu */}
               <MenuItem
-                icon={BsGraphUp}
+                icon={IoStatsChart}
                 label='Statistics'
                 address='/dashboard'
               />

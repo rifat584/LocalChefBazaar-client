@@ -3,8 +3,20 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import uploadImage from "../../utilitis/uploadImage";
 import { toast, Toaster } from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import queryFetch from "../../utilitis/queryFetch";
+import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+
+
 const CreateMealForm = () => {
   const { user } = useAuth();
+  // tanstack query
+  const { data:userData, isLoading: isUserLoading } = useQuery({
+    queryKey: ["user", user?.email],
+    queryFn: async () => queryFetch(`user/${user?.email}`),
+  });
+
+  console.log(userData);
   const {
     register,
     handleSubmit,
@@ -22,6 +34,7 @@ const CreateMealForm = () => {
       rating,
       chefExperience,
       foodImage,
+      chefId,
     } = data;
 
     const deliverytime = estimatedDeliveryTime.split("-");
@@ -33,6 +46,7 @@ const CreateMealForm = () => {
       const foodData = {
         foodName,
         chefName,
+        chefId,
         ingredients: ingredients.split(","),
         estimatedDeliveryTime: { minTime, maxTime },
         price: Number(price),
@@ -55,7 +69,7 @@ const CreateMealForm = () => {
       console.log(error);
     }
   };
-
+  if (isUserLoading) return <LoadingSpinner />;
   return (
     <div className="w-full min-h-[calc(100vh-40px)] flex justify-center items-center bg-gray-50 text-gray-800 rounded-xl">
       <form
@@ -86,7 +100,7 @@ const CreateMealForm = () => {
               <input
                 type="text"
                 {...register("chefName", {
-                  required: { value: true, message: "Chef Name is required" },
+                  required: { value: true, message: "Chef Name is required" }, value:userData?.name
                 })}
                 placeholder="Chef full name"
                 className="w-full px-4 py-3 border border-lime-300 rounded-md focus:outline-lime-500"
@@ -226,8 +240,8 @@ const CreateMealForm = () => {
               <label className="block text-gray-600">Chef ID</label>
               <input
                 type="text"
-                {...register("chefId", {})}
-                value={"chefId"} // from backend/admin approval
+                {...register("chefId", {value: userData?.chefId})}
+                
                 readOnly
                 className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed"
               />
@@ -239,7 +253,7 @@ const CreateMealForm = () => {
               <input
                 type="email"
                 name="email"
-                value={user?.email}
+                value={userData?.email}
                 readOnly
                 className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed"
               />

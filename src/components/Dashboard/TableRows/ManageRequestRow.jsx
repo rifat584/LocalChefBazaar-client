@@ -1,38 +1,51 @@
-import { useState } from 'react'
-import UpdateUserRoleModal from '../../Modal/UpdateUserRoleModal'
+import axios from "axios";
+import toast from "react-hot-toast";
 
-const ManageRequestRow = () => {
-  let [isOpen, setIsOpen] = useState(false)
-  const closeModal = () => setIsOpen(false)
+const ManageRequestRow = ({ userRole }) => {
+  const { userEmail, requestStatus, requestType } = userRole;
+
+  const handleAcceptUserRole = async () => {
+    try {
+      const acceptRequest= await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/user/${userEmail}`)
+      console.log(acceptRequest);
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+  const handleRejectUserRole = async () => {
+        console.log("clicked");
+
+  };
+
   return (
     <tr>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>abc@gmail.com</p>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="text-gray-900 ">{userEmail}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>Customer</p>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="text-gray-900 ">{requestType}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className=''>Pending</p>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="">{requestStatus}</p>
       </td>
 
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <span
-          onClick={() => setIsOpen(true)}
-          className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
+      <td className="px-5 py-5 text-sm space-x-3">
+        <button
+          className="btn btn-active btn-success text-white border-none"
+          onClick={handleAcceptUserRole}
         >
-          <span
-            aria-hidden='true'
-            className='absolute inset-0 bg-green-200 opacity-50 rounded-full'
-          ></span>
-          <span className='relative'>Update Role</span>
-        </span>
-        {/* Modal */}
-        <button>Accept</button>
-        <button>Reject</button>
+          Accept
+        </button>
+        <button
+          className="btn btn-active btn-error text-white border-none"
+          onClick={handleRejectUserRole}
+        >
+          Reject
+        </button>
       </td>
     </tr>
-  )
-}
+  );
+};
 
-export default ManageRequestRow
+export default ManageRequestRow;
