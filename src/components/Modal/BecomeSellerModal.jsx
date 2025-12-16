@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle, DialogPanel } from '@headlessui/react'
 import axios from 'axios';
 import useAuth from '../../hooks/useAuth';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 
 const BecomeSellerModal = ({ closeModal, isOpen }) => {
   const {user}= useAuth();

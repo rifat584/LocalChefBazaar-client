@@ -12,13 +12,20 @@ import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import toast, { ToastBar } from "react-hot-toast";
+import ReviewModal from "../../components/Modal/ReviewModal";
 
 const MealDetails = () => {
+  // purchase modal
   let [isOpen, setIsOpen] = useState(false);
-
   const closeModal = () => {
     setIsOpen(false);
   };
+// review modal
+  let [isOpenReview, setIsOpenReview] = useState(false);
+  const closeModalReview = () => {
+    setIsOpenReview(false);
+  };
+
   const { id } = useParams();
   const { user } = useAuth();
 
@@ -76,21 +83,10 @@ const MealDetails = () => {
   };
 
   // add meal review
-  // const mealReviewData = {
-  //   reviewerName: user?.displayName,
-  //   reviewerImage: user?.photoURL,
-  //   rating: rating,
-  //   comment: chefName,
-  // };
+  
   // const handleCustomerReview = async () => {
   //   try {
-  //     const addToFavList = await axios.post(
-  //       `${import.meta.env.VITE_API_BASE_URL}/review/${_id}`,
-  //       mealReviewData
-  //     );
-  //     if (addToFavList.data.insertedId) {
-  //       toast.success("Successfully added to your Favorite");
-  //     }
+      
   //   } catch (error) {
   //     toast.error(error.response.data.message);
   //   }
@@ -232,11 +228,13 @@ const MealDetails = () => {
           </div>
 
           <div className="flex justify-center mt-6">
-            <button onClick={handleCustomerReview} className="btn btn-primary">Write a Review</button>
+            <button
+            onClick={() => setIsOpenReview(true)}
+             className="btn btn-primary">Write a Review</button>
           </div>
         </div>
       </div>
-
+        <ReviewModal isOpenReview={isOpenReview} closeModalReview={closeModalReview} id={_id}/>                  
       <PurchaseModal isOpen={isOpen} closeModal={closeModal} />
     </Container>
   );
