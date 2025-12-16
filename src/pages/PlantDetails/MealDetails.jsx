@@ -10,6 +10,8 @@ import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import useAuth from "../../hooks/useAuth";
+import axios from "axios";
+import toast, { ToastBar } from "react-hot-toast";
 
 const MealDetails = () => {
   let [isOpen, setIsOpen] = useState(false);
@@ -37,6 +39,7 @@ const MealDetails = () => {
   if (isMealLoading) return <LoadingSpinner />;
   if (userDataLoading) return <LoadingSpinner />;
 
+  // meal data
   const {
     foodName,
     chefName,
@@ -47,12 +50,58 @@ const MealDetails = () => {
     foodImage,
     price,
     rating,
+    _id,
   } = mealData;
+
+  // add to favorite data
+  const favoriteFood = {
+    userEmail: userData?.email,
+    mealName: foodName,
+    chefId: chefId,
+    chefName: chefName,
+    price: price,
+  };
+  const handleAddToFavorite = async () => {
+    try {
+      const addToFavList = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/favorite/${_id}`,
+        favoriteFood
+      );
+      if (addToFavList.data.insertedId) {
+        toast.success("Successfully added to your Favorite");
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  // add meal review
+  // const mealReviewData = {
+  //   reviewerName: user?.displayName,
+  //   reviewerImage: user?.photoURL,
+  //   rating: rating,
+  //   comment: chefName,
+  // };
+  // const handleCustomerReview = async () => {
+  //   try {
+  //     const addToFavList = await axios.post(
+  //       `${import.meta.env.VITE_API_BASE_URL}/review/${_id}`,
+  //       mealReviewData
+  //     );
+  //     if (addToFavList.data.insertedId) {
+  //       toast.success("Successfully added to your Favorite");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //   }
+  // };
+
 
   return (
     <Container>
       <div className="max-w-5xl mx-auto">
         <div className="card lg:card-side bg-base-100 shadow-xl">
+        
           <figure className="lg:w-1/2">
             <img
               src={foodImage}
@@ -64,7 +113,10 @@ const MealDetails = () => {
           <div className="card-body">
             <div className="flex justify-between items-start">
               <Heading title={foodName}></Heading>
-              <button className="btn btn-circle btn-outline hover:btn-primary btn-sm p-0 leading-none flex items-center justify-center">
+              <button
+                className="btn btn-circle btn-outline hover:btn-primary btn-sm p-0 leading-none flex items-center justify-center"
+                onClick={handleAddToFavorite}
+              >
                 <FaRegStar className="text-xl" />
               </button>
             </div>
@@ -109,7 +161,8 @@ const MealDetails = () => {
                 </div>
                 <div className="stat p-3">
                   <div className="stat-title text-xs">Area</div>
-                  <div className="stat-value text-lg">{userData.address}</div>
+                  {/* this is user's address */}
+                  <div className="stat-value text-lg">{userData?.address}</div>
                 </div>
               </div>
 
@@ -179,7 +232,7 @@ const MealDetails = () => {
           </div>
 
           <div className="flex justify-center mt-6">
-            <button className="btn btn-primary">Write a Review</button>
+            <button onClick={handleCustomerReview} className="btn btn-primary">Write a Review</button>
           </div>
         </div>
       </div>
