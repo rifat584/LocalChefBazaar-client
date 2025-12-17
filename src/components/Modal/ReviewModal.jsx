@@ -5,7 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ReviewModal = ({ isOpenReview, closeModalReview, id }) => {
+const ReviewModal = ({ isOpenReview, closeModalReview, id , refetch}) => {
   const {
     register,
     handleSubmit,
@@ -28,6 +28,7 @@ const {user}= useAuth();
       );
       if (addToFavList.data.insertedId) {
         toast.success("Your review has been added");
+        refetch()
       }
       closeModalReview();
       resetReviewField()

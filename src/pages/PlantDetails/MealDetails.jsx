@@ -20,7 +20,7 @@ const MealDetails = () => {
   const closeModal = () => {
     setIsOpen(false);
   };
-// review modal
+  // review modal
   let [isOpenReview, setIsOpenReview] = useState(false);
   const closeModalReview = () => {
     setIsOpenReview(false);
@@ -43,8 +43,20 @@ const MealDetails = () => {
     queryFn: () => queryFetch(`user/${user.email}`),
   });
 
+  // LOAD REVIEWS
+  const {
+    data: reviews,
+    isLoading: isReviewLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["review", mealData?._id],
+    enabled: !!mealData?._id,
+    queryFn: () => queryFetch(`reviews/${mealData?._id}`),
+  });
+
   if (isMealLoading) return <LoadingSpinner />;
   if (userDataLoading) return <LoadingSpinner />;
+  if (isReviewLoading) return <LoadingSpinner />;
 
   // meal data
   const {
@@ -82,22 +94,10 @@ const MealDetails = () => {
     }
   };
 
-  // add meal review
-  
-  // const handleCustomerReview = async () => {
-  //   try {
-      
-  //   } catch (error) {
-  //     toast.error(error.response.data.message);
-  //   }
-  // };
-
-
   return (
     <Container>
       <div className="max-w-5xl mx-auto">
         <div className="card lg:card-side bg-base-100 shadow-xl">
-        
           <figure className="lg:w-1/2">
             <img
               src={foodImage}
@@ -181,61 +181,76 @@ const MealDetails = () => {
             </div>
           </div>
         </div>
-
+        {/* customer reviews */}
         <div className="mt-12">
           <h2 className="text-3xl font-bold mb-6">Customer Reviews</h2>
 
-          <div className="card bg-base-100 shadow-xl max-w-2xl mx-auto">
-            <div className="card-body">
-              <div className="flex items-start gap-4">
-                <div className="avatar">
-                  <div className="w-16 rounded-full">
-                    <img
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFLA5gZ352Mtmj5OMlzW9FEIVV5n3dDbSgeg&s"
-                      alt="Ariana Sultana"
-                    />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-bold text-lg">Ariana Sultana</h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="rating rating-sm">
-                          {[...Array(5)].map((_, i) => (
-                            <input
-                              key={i}
-                              type="radio"
-                              className="mask mask-star-2 bg-warning"
-                              checked={i < 5}
-                              readOnly
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm font-semibold">5.0</span>
+          <div className="flex gap">
+            {reviews.map((review) => (
+              <div key={review._id} className="card bg-base-100 shadow-xl max-w-2xl mx-auto">
+                <div className="card-body">
+                  <div className="flex items-start gap-4">
+                    <div className="avatar">
+                      <div className="w-16 rounded-full">
+                        <img src={review.reviewerImage} alt="Ariana Sultana" />
                       </div>
                     </div>
-                    <span className="text-sm opacity-60">
-                      {new Date("2025-01-15T12:45:00Z").toLocaleDateString()}
-                    </span>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-bold text-lg">
+                            {review.reviewerName}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className="rating rating-sm">
+                              {[...Array(Number(review.rating))].map((_, i) => (
+                                <input
+                                  key={i}
+                                  type="radio"
+                                  className="mask mask-star-2 bg-warning"
+                                  checked={i < Number(review.rating)}
+                                  readOnly
+                                />
+                              ))}
+                            </div>
+                            <span className="text-sm font-semibold">
+                              {review.rating}
+                            </span>
+                          </div>
+                        </div>
+                        <span className="text-sm opacity-60">
+                          {review.date.split("T")[0]}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-base">{review.comment}</p>
+                    </div>
                   </div>
-                  <p className="mt-3 text-base">
-                    The food was delicious! Perfect taste and fast delivery.
-                  </p>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
 
           <div className="flex justify-center mt-6">
             <button
-            onClick={() => setIsOpenReview(true)}
-             className="btn btn-primary">Write a Review</button>
+              onClick={() => setIsOpenReview(true)}
+              className="btn btn-primary"
+            >
+              Write a Review
+            </button>
           </div>
         </div>
       </div>
-        <ReviewModal isOpenReview={isOpenReview} closeModalReview={closeModalReview} id={_id}/>                  
-      <PurchaseModal isOpen={isOpen} closeModal={closeModal} />
+      <ReviewModal
+        isOpenReview={isOpenReview}
+        closeModalReview={closeModalReview}
+        id={_id}
+        refetch={refetch}
+      />
+      <PurchaseModal
+        isOpen={isOpen}
+        closeModal={closeModal}
+        mealData={mealData}
+      />
     </Container>
   );
 };
