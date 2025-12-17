@@ -1,41 +1,49 @@
-import { useState } from 'react'
-import UpdateUserRoleModal from '../../Modal/UpdateUserRoleModal'
+import { useState } from "react";
+import UpdateUserRoleModal from "../../Modal/UpdateUserRoleModal";
 
-const UserDataRow = () => {
-  let [isOpen, setIsOpen] = useState(false)
-  const closeModal = () => setIsOpen(false)
+const UserDataRow = ({ user, refetch }) => {
+  let [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
+
+  const { email, status, _id, role } =
+    user;
   return (
     <tr>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>abc@gmail.com</p>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="text-gray-900 ">{email}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>Customer</p>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="text-gray-900 ">{role}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className=''>Pending</p>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="">{status}</p>
       </td>
 
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <span
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        {
+           role!=="admin" &&<><span
           onClick={() => setIsOpen(true)}
-          className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
+          className="relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight"
         >
           <span
-            aria-hidden='true'
-            className='absolute inset-0 bg-green-200 opacity-50 rounded-full'
+            aria-hidden="true"
+            className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
           ></span>
-          <span className='relative'>Update Role</span>
+          
+          <span className="relative">Update Role</span>
         </span>
         {/* Modal */}
         <UpdateUserRoleModal
           isOpen={isOpen}
           closeModal={closeModal}
-          role='customer'
-        />
+          role="user"
+          email={email}
+          refetch={refetch}
+        /></>
+        }
       </td>
     </tr>
-  )
-}
+  );
+};
 
-export default UserDataRow
+export default UserDataRow;

@@ -1,54 +1,39 @@
-import { useState } from 'react'
-import DeleteModal from '../../Modal/DeleteModal'
+import { useState } from "react";
+import DeleteModal from "../../Modal/DeleteModal";
 const CustomerOrderDataRow = () => {
-  let [isOpen, setIsOpen] = useState(false)
-  const closeModal = () => setIsOpen(false)
+  const handlePayment = async () => {
+    console.log("clicked");
+    
+  };
+
 
   return (
     <tr>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <div className='flex items-center'>
-          <div className='shrink-0'>
-            <div className='block relative'>
-              <img
-                alt='profile'
-                src='https://i.ibb.co.com/rMHmQP2/money-plant-in-feng-shui-brings-luck.jpg'
-                className='mx-auto object-cover rounded h-10 w-15 '
-              />
-            </div>
-          </div>
-        </div>
+      <td className="font-medium">Desert</td>
+
+      <td>
+        <span className="badge badge-warning capitalize">pending</span>
       </td>
 
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>Money Plant</p>
-      </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>Indoor</p>
-      </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>$120</p>
-      </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>5</p>
-      </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>Pending</p>
+      <td>৳180</td>
+
+      <td>1</td>
+
+      <td>30 min</td>
+
+      <td>Chef John</td>
+
+      <td>chef-2116</td>
+
+      <td>
+        <span className="badge badge-outline capitalize">pending</span>
       </td>
 
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <button
-          onClick={() => setIsOpen(true)}
-          className='relative disabled:cursor-not-allowed cursor-pointer inline-block px-3 py-1 font-semibold text-lime-900 leading-tight'
-        >
-          <span className='absolute cursor-pointer inset-0 bg-red-200 opacity-50 rounded-full'></span>
-          <span className='relative cursor-pointer'>Cancel</span>
-        </button>
-
-        <DeleteModal isOpen={isOpen} closeModal={closeModal} />
+      <td className="text-right">
+        <button onClick={handlePayment} className="btn btn-xs btn-primary">Pay</button>
       </td>
     </tr>
-  )
-}
+  );
+};
 
-export default CustomerOrderDataRow
+export default CustomerOrderDataRow;

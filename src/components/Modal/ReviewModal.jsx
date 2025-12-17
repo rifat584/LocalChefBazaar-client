@@ -18,6 +18,7 @@ const {user}= useAuth();
     const mealReviewData = {
     reviewerName: user?.displayName,
     reviewerImage: user?.photoURL,
+    reviewerEmail: user?.email,
     rating: data?.rating,
     comment: data?.comment,
   };
@@ -33,6 +34,7 @@ const {user}= useAuth();
       closeModalReview();
       resetReviewField()
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
       closeModalReview();
       resetReviewField()

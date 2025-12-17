@@ -1,6 +1,23 @@
+import { useQuery } from '@tanstack/react-query'
 import SellerOrderDataRow from '../../../components/Dashboard/TableRows/SellerOrderDataRow'
+import useAuth from '../../../hooks/useAuth'
+import queryFetch from '../../../utilitis/queryFetch'
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
 
 const OrderRequests = () => {
+  const {user}= useAuth()
+
+    const {data:orders, isLoading, refetch}= useQuery(
+      {
+        queryKey: ['user', user?.email],
+        enabled: !!user?.email,
+        queryFn: ()=> queryFetch(`order/${user?.email}`)
+      }
+    )
+  if(isLoading) return <LoadingSpinner/>
+  console.log(orders);
+
+
   return (
     <>
       <div className='container mx-auto px-4 sm:px-8'>
@@ -14,13 +31,13 @@ const OrderRequests = () => {
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Name
+                      Food Name
                     </th>
                     <th
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Customer
+                      User Email
                     </th>
                     <th
                       scope='col'
@@ -38,13 +55,25 @@ const OrderRequests = () => {
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Address
+                      User Address
                     </th>
                     <th
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Status
+                      Order Status
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
+                    >
+                      Order Time
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
+                    >
+                      Payment Status
                     </th>
 
                     <th
@@ -56,7 +85,9 @@ const OrderRequests = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <SellerOrderDataRow />
+                  {
+                    orders.map(order=><SellerOrderDataRow order={order} key={order._id} refetch={refetch}/>)
+                  }
                 </tbody>
               </table>
             </div>

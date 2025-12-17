@@ -1,70 +1,42 @@
-import CustomerOrderDataRow from '../../../components/Dashboard/TableRows/CustomerOrderDataRow'
+import { useQuery } from "@tanstack/react-query";
+import CustomerOrderDataRow from "../../../components/Dashboard/TableRows/CustomerOrderDataRow";
+import useAuth from "../../../hooks/useAuth";
+import queryFetch from "../../../utilitis/queryFetch";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const MyOrders = () => {
+  const { user } = useAuth();
+  const { data: orderData, isLoading } = useQuery({
+    queryKey: ["order", user?.email],
+    enabled: !!user?.email,
+    queryFn: () => queryFetch(`order/${user?.email}`),
+  });
+  if (isLoading) return <LoadingSpinner />;
+  console.log(orderData);
+
   return (
-    <>
-      <div className='container mx-auto px-4 sm:px-8'>
-        <div className='py-8'>
-          <div className='-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto'>
-            <div className='inline-block min-w-full shadow rounded-lg overflow-hidden'>
-              <table className='min-w-full leading-normal'>
-                <thead>
-                  <tr>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Image
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Category
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Price
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Quantity
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Status
-                    </th>
+    <div className="overflow-x-auto bg-base-100 rounded-lg shadow">
+      <table className="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Food Name</th>
+            <th>Status</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Delivery Time</th>
+            <th>Chef Name</th>
+            <th>Chef ID</th>
+            <th>Payment</th>
+            <th className="text-right">Action</th>
+          </tr>
+        </thead>
 
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <CustomerOrderDataRow />
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
+        <tbody>
+          <CustomerOrderDataRow />
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
-export default MyOrders
+export default MyOrders;

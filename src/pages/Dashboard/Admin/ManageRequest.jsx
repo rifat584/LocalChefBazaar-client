@@ -7,16 +7,13 @@ import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const ManageRequest = () => {
   const { user } = useAuth();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading , refetch} = useQuery({
     queryKey: ["user", user?.email],
-    queryFn: async () => {
-      const userRoles = await queryFetch(`roles`);
-      return userRoles;
-    },
+    enabled: !!user?.email,
+    queryFn:  () => queryFetch(`roles`)
   });
   if (isLoading) return <LoadingSpinner />;
 
-  console.log(data);
   return (
     <div className="container mx-auto px-4 sm:px-8">
       <div className="py-8">
@@ -55,7 +52,7 @@ const ManageRequest = () => {
               <tbody>
                 {
                   data.map(userRole=>
-                    <ManageRequestRow userRole={userRole} key={userRole._id}/>
+                    <ManageRequestRow userRole={userRole} key={userRole._id} refetch={refetch}/>
                   )
                 }
               </tbody>

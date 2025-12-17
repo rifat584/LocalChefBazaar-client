@@ -1,21 +1,39 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ManageRequestRow = ({ userRole }) => {
+const ManageRequestRow = ({ userRole, refetch }) => {
   const { userEmail, requestStatus, requestType } = userRole;
 
   const handleAcceptUserRole = async () => {
     try {
-      const acceptRequest= await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/user/${userEmail}`)
-      console.log(acceptRequest);
+      const acceptRequest = await axios.patch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/user/${userEmail}?role=${requestType}`
+      );
+      if (acceptRequest.data.role === requestType) {
+        await axios.delete(
+          `${import.meta.env.VITE_API_BASE_URL}/role/${userEmail}`
+        );
+        toast.success(`${userEmail} has been set to ${requestType}`);
+        refetch();
+      }
     } catch (error) {
       toast.error(error.message);
       console.log(error);
     }
   };
   const handleRejectUserRole = async () => {
-        console.log("clicked");
-
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/role/${userEmail}`
+      );
+      toast.error("User's request has been denied!");
+      refetch();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
 
   return (

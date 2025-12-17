@@ -1,6 +1,20 @@
+import { useQuery } from '@tanstack/react-query'
 import UserDataRow from '../../../components/Dashboard/TableRows/UserDataRow'
+import useAuth from '../../../hooks/useAuth'
+import queryFetch from '../../../utilitis/queryFetch';
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner';
 
 const ManageUsers = () => {
+  const {user}= useAuth();
+  const {data:allUsers, isLoading, refetch}= useQuery(
+    {
+      queryKey: ['user', user?.email],
+      enabled: !!user?.email,
+      queryFn: ()=>queryFetch(`users`),
+    }
+  )
+  if(isLoading) return <LoadingSpinner/>
+
   return (
     <>
       <div className='container mx-auto px-4 sm:px-8'>
@@ -38,7 +52,9 @@ const ManageUsers = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <UserDataRow />
+                  {
+                    allUsers.map(user=><UserDataRow user={user} key={user._id} refetch={refetch}/>)
+                  }
                 </tbody>
               </table>
             </div>

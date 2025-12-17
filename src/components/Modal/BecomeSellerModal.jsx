@@ -19,8 +19,6 @@ const BecomeSellerModal = ({ closeModal, isOpen }) => {
     const updateRoleRequest = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/roles`, roleData)
     console.log(updateRoleRequest);
     closeModal()
-
-    
   }
   return (
     <Dialog
