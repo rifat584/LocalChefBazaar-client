@@ -1,16 +1,85 @@
-# React + Vite
+# LocalChefBazaar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18-green)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green)](https://www.mongodb.com/)
+[![Express](https://img.shields.io/badge/Express-4.x-yellowgreen)](https://expressjs.com/)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## React Compiler
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Folder Structure](#folder-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Project Overview
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+**LocalChefBazaar** is a full-stack food marketplace where users can browse meals, order from local chefs, and leave reviews. Chefs can manage their meals, track orders, and view platform analytics through an admin dashboard.
+
+This project demonstrates modern web development practices using React, Tailwind CSS, React Query, Node.js, Express, MongoDB, and Stripe for payment integration.
+
+---
+
+## Features
+
+### User Features
+
+- Browse daily meals and search by chef or food name
+- View meal details with ingredients, chef info, estimated delivery time, and reviews
+- Submit reviews and add meals to favorites
+- Place orders with Stripe payment integration
+- Paginated meal listings with sorting options
+- Profile management and order tracking
+
+### Chef Features
+
+- Add, update, and delete meals
+- View order requests and update order statuses
+- Track revenue and sales via charts
+
+### Admin Features
+
+- Dashboard with key metrics: total users, total revenue, orders pending/delivered
+- Recharts visualization for revenue and order statistics
+- Manage users, roles, and review moderation
+
+---
+
+## Tech Stack
+
+- **Frontend:** React 18, Tailwind CSS, React Router, Framer Motion, React Swiper, React Query, Axios
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (Atlas or local)
+- **Authentication:** Firebase Auth (JWT)
+- **Payment:** Stripe
+- **Visualization:** Recharts
+- **Others:** Vite, dotenv, CORS
+
+---
+
+## Installation
+
+### Prerequisites
+
+- Node.js >= 18
+- npm or yarn
+- MongoDB Atlas account or local MongoDB
+- Firebase project (for authentication)
+- Stripe account (for payments)
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+```
