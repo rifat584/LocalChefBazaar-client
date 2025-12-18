@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import useAuth from '../../../hooks/useAuth'
-import logo from '../../../assets/images/logo-flat.png'
 // Icons
 import { GrLogout } from 'react-icons/gr'
 import { FcSettings } from 'react-icons/fc'
@@ -12,14 +11,14 @@ import { IoStatsChart } from "react-icons/io5";
 // User Menu
 import MenuItem from './Menu/MenuItem'
 import AdminMenu from './Menu/AdminMenu'
-import SellerMenu from './Menu/SellerMenu'
-import CustomerMenu from './Menu/UserMenu'
 import UserMenu from './Menu/UserMenu'
+import useRole from '../../../hooks/useRole'
+import ChefMenu from './Menu/ChefMenu'
 
 const Sidebar = () => {
   const { logOut } = useAuth()
   const [isActive, setActive] = useState(false)
-
+  const role = useRole();
   // Sidebar Responsive Handler
   const handleToggle = () => {
     setActive(!isActive)
@@ -69,15 +68,24 @@ const Sidebar = () => {
             {/*  Menu Items */}
             <nav>
               {/* Common Menu */}
-              <MenuItem
+              {role==="admin" && <MenuItem
                 icon={IoStatsChart}
                 label='Statistics'
-                address='/dashboard'
-              />
+                address='/dashboard/stat'
+              />}
               {/* Role-Based Menu */}
-              <UserMenu />
-              <SellerMenu />
-              <AdminMenu />
+              {
+                role==="user" && <UserMenu />
+              }
+              {
+                role==="chef" && <ChefMenu />
+              }
+              {
+                role==="admin" &&  <AdminMenu />
+              }
+              
+              
+             
             </nav>
           </div>
 

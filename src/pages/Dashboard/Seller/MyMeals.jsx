@@ -1,14 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
-import PlantDataRow from '../../../components/Dashboard/TableRows/MealDataRow'
+import {  useQuery } from '@tanstack/react-query'
 import queryFetch from '../../../utilitis/queryFetch'
 import useAuth from '../../../hooks/useAuth'
 import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
-import axios from 'axios'
 import MealDataRow from '../../../components/Dashboard/TableRows/MealDataRow'
+
 
 const MyMeals = () => {
   const {user}= useAuth();
-// console.log(user?.email);
+
   const {data:myMeals=[],  isLoading}= useQuery({
     queryKey: ['myMeals', user?.email],
     enabled: !!user?.email,
@@ -18,8 +17,10 @@ const MyMeals = () => {
       return meals;
     }
   })
+  
+
   if(isLoading) return <LoadingSpinner/>
-  console.log(myMeals);
+  // console.log(myMeals);
 
   return (
     <>
@@ -95,7 +96,7 @@ const MyMeals = () => {
                 </thead>
                 <tbody>
                   {
-                    myMeals.map(meal=><MealDataRow meal={meal} key={meal._id}/>)
+                    myMeals.map(meal=><MealDataRow meal={meal} key={meal._id} user={user}/>)
                   }
                 </tbody>
               </table>

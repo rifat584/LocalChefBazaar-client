@@ -66,7 +66,7 @@ const MyReview = () => {
                 </thead>
                 <tbody>
                   {
-                    MyReviews.map(review=> <MyReviewForm key={review._id} review={review}  />)
+                    MyReviews.map(review=> <MyReviewForm key={review._id} review={review} user={user} />)
                   }
                  
                 </tbody>

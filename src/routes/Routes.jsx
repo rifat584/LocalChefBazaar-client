@@ -20,6 +20,10 @@ import MyMeals from "../pages/Dashboard/Seller/MyMeals";
 import MyReview from "../pages/Dashboard/Customer/MyReview";
 import FavoriteMeal from "../pages/Dashboard/Customer/FavoriteMeal";
 import PaymentSuccess from "../pages/Dashboard/Customer/PaymentSuccess";
+import AllMeals from "../pages/Meals/AllMeals";
+import ChefRoute from "./ChefRoute";
+import AdminRoute from "./AdminRoute";
+import UserRoute from "./UserRoute";
 
 export const router = createBrowserRouter([
   {
@@ -32,10 +36,16 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/meal/:id",
-        element: <MealDetails />,
+        path: "/all-meals",
+        element: <AllMeals />,
       },
-            {
+      {
+        path: "/meal/:id",
+        element: <PrivateRoute>
+          <MealDetails />
+        </PrivateRoute>,
+      },
+      {
         path: "payment-success",
         element: (
           <PrivateRoute>
@@ -57,14 +67,14 @@ export const router = createBrowserRouter([
     children: [
       // common
       {
-        index: true,
+        path: 'stat',
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <Statistics />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
-            {
+      {
         path: "profile",
         element: (
           <PrivateRoute>
@@ -76,65 +86,67 @@ export const router = createBrowserRouter([
       {
         path: "create-meal",
         element: (
-          <PrivateRoute>
+          <ChefRoute>
             <CreateMeal />
-          </PrivateRoute>
+          </ChefRoute>
         ),
       },
       {
         path: "my-meals",
         element: (
-          <PrivateRoute>
+          <ChefRoute>
             <MyMeals />
-          </PrivateRoute>
+          </ChefRoute>
         ),
       },
       {
         path: "order-requests",
-        element: <PrivateRoute>
-          <OrderRequests />
-        </PrivateRoute>,
+        element: (
+          <ChefRoute>
+            <OrderRequests />
+          </ChefRoute>
+        ),
       },
-      // Admin 
+      // Admin
       {
         path: "manage-users",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <ManageUsers />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
         path: "manage-request",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <ManageRequest />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       // user
       {
         path: "my-orders",
         element: (
-          <PrivateRoute>
+          <UserRoute>
             <MyOrders />
-          </PrivateRoute>
+          </UserRoute>
         ),
       },
       {
         path: "my-review",
         element: (
-          <PrivateRoute>
+          <UserRoute>
             <MyReview />
-          </PrivateRoute>
+          </UserRoute>
         ),
       },
       {
         path: "favorite-meal",
         element: (
-          <PrivateRoute>
+          <UserRoute>
             <FavoriteMeal />
-          </PrivateRoute>
+          </UserRoute>
         ),
       },
     ],

@@ -1,12 +1,20 @@
-import Meals from '../../components/Home/Meals'
+
+import { Link } from "react-router";
+import Hero from "../../components/Home/Hero";
+import DailyMeals from "../../components/Home/DailyMeals";
+import ReviewsSection from "../../components/Home/ReviewsSection";
+import WhyChooseUs from "../../components/Home/WhyChooseUs";
+
 
 const Home = () => {
   return (
-    <div>
-      <Meals />
-      {/* More components */}
-    </div>
-  )
-}
+<div>
+  <Hero/>
+  <DailyMeals/>
+  <ReviewsSection/>
+  <WhyChooseUs/>
+</div>
+  );
+};
 
-export default Home
+export default Home;

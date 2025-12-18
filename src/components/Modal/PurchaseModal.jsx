@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import Swal from 'sweetalert2'
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 const PurchaseModal = ({ closeModal, isOpen, mealData }) => {
   const {user}= useAuth();
@@ -28,14 +30,20 @@ const PurchaseModal = ({ closeModal, isOpen, mealData }) => {
         orderStatus: 'pending',
         paymentStatus: 'pending',
       }
-      console.log(orderInfo);
-      const orderSubmit = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders`, orderInfo);
-      console.log(orderSubmit);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders`, orderInfo);
+      
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
+    }finally{
+      closeModal();
     }
   }
+const {mutate}=useMutation({
+  mutationFn: handleOrder,
+  onSuccess: ()=>toast.success("ordered place successfully!"),
+  onError: (err)=>toast.success(err.message),
 
+})
   return (
     <Dialog
       open={isOpen}
@@ -88,7 +96,7 @@ const PurchaseModal = ({ closeModal, isOpen, mealData }) => {
             <div className="flex mt-2 justify-around">
               <button
                 type="submit"
-                onClick={handleOrder}
+                onClick={mutate}
                 className="cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               >
                 Pay

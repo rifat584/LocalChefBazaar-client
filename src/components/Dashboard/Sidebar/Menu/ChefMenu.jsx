@@ -5,7 +5,7 @@ import { IoFastFoodSharp } from "react-icons/io5";
 import { PiChefHatFill } from "react-icons/pi";
 
 import MenuItem from './MenuItem'
-const SellerMenu = () => {
+const ChefMenu = () => {
   return (
     <>
       <MenuItem
@@ -23,4 +23,4 @@ const SellerMenu = () => {
   )
 }
 
-export default SellerMenu
+export default ChefMenu

@@ -2,6 +2,7 @@ import { useState } from "react";
 import DeleteModal from "../../Modal/DeleteModal";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import toast from "react-hot-toast";
 const CustomerOrderDataRow = ({order}) => {
   // console.log(order);
   const {estimatedDeliveryTime, chefName, mealName, orderStatus, orderTime, paymentStatus, price, quantity, userAddress, userEmail, _id}= order;
@@ -9,12 +10,10 @@ const CustomerOrderDataRow = ({order}) => {
   const {mutate:handlePayment } = useMutation({
     mutationFn: ()=> axios.post(`${import.meta.env.VITE_API_BASE_URL}/create-checkout-session`, order),
     onSuccess: data=>{
-      console.log(data.data.url);
-      console.log(window);
       window.location.href= data.data.url
     },
     onError: error=>{
-      console.log(error);
+      toast.error(error.response.data.error);
     }
   })
 

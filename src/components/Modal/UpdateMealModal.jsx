@@ -2,7 +2,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import UpdatePlantForm from '../Form/UpdateMealForm'
 import UpdateMealForm from '../Form/UpdateMealForm'
 
-const UpdateMealModal = ({ setIsEditModalOpen, isOpen }) => {
+const UpdateMealModal = ({ setIsEditModalOpen, isOpen, meal }) => {
   return (
     <Dialog
       open={isOpen}
@@ -31,7 +31,7 @@ const UpdateMealModal = ({ setIsEditModalOpen, isOpen }) => {
               Update Plant Info
             </DialogTitle>
             <div className='mt-2 w-full'>
-              <UpdateMealForm />
+              <UpdateMealForm meal={meal} />
             </div>
           </DialogPanel>
         </div>
