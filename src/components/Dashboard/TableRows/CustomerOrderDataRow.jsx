@@ -1,13 +1,24 @@
 import { useState } from "react";
 import DeleteModal from "../../Modal/DeleteModal";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 const CustomerOrderDataRow = ({order}) => {
   // console.log(order);
-  const handlePayment = async () => {
-    console.log("clicked");
-    
-  };
+  const {estimatedDeliveryTime, chefName, mealName, orderStatus, orderTime, paymentStatus, price, quantity, userAddress, userEmail, _id}= order;
+  
+  const {mutate:handlePayment } = useMutation({
+    mutationFn: ()=> axios.post(`${import.meta.env.VITE_API_BASE_URL}/create-checkout-session`, order),
+    onSuccess: data=>{
+      console.log(data.data.url);
+      console.log(window);
+      window.location.href= data.data.url
+    },
+    onError: error=>{
+      console.log(error);
+    }
+  })
 
-const {estimatedDeliveryTime, chefName, mealName, orderStatus, orderTime, paymentStatus, price, quantity, userAddress, userEmail, _id}= order;
+
 
   return (
     <tr>
@@ -32,7 +43,11 @@ const {estimatedDeliveryTime, chefName, mealName, orderStatus, orderTime, paymen
       </td>
 
       <td className="text-right">
-        <button onClick={handlePayment} className="btn btn-xs btn-primary">Pay</button>
+        <button
+        onClick={handlePayment}
+        className="btn btn-xs btn-primary"
+        disabled={orderStatus==="pending" || orderStatus==="delivered" || paymentStatus==="paid"}
+        >Pay</button>
       </td>
     </tr>
   );
