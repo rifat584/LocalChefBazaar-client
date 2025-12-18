@@ -7,15 +7,22 @@ import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
 const OrderRequests = () => {
   const {user}= useAuth()
 
-    const {data:orders, isLoading, refetch}= useQuery(
-      {
-        queryKey: ['orders', user?.email],
-        enabled: !!user?.email,
-        queryFn: ()=> queryFetch(`order/${user?.email}`)
-      }
-    )
-  if(isLoading) return <LoadingSpinner/>
-  console.log(orders);
+  const { data: userData } = useQuery({
+  queryKey: ['user', user?.email],
+  enabled: !!user?.email,
+  queryFn: () => queryFetch(`user/${user?.email}`),
+});
+
+const chefId = userData?.chefId;
+
+const { data: orders = [], isLoading } = useQuery({
+  queryKey: ['orders', chefId],
+  enabled: !!chefId,
+  queryFn: () => queryFetch(`order/chef/${chefId}`),
+});
+if(isLoading) return <LoadingSpinner/>
+console.log(orders);
+
 
 
   return (
@@ -86,7 +93,7 @@ const OrderRequests = () => {
                 </thead>
                 <tbody>
                   {
-                    orders.map(order=><SellerOrderDataRow order={order} key={order._id} refetch={refetch}/>)
+                    orders.map(order=><SellerOrderDataRow order={order} key={order._id}/>)
                   }
                 </tbody>
               </table>

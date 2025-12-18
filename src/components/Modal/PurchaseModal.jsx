@@ -6,8 +6,8 @@ import Swal from 'sweetalert2'
 
 const PurchaseModal = ({ closeModal, isOpen, mealData }) => {
   const {user}= useAuth();
-  const { foodName, price, chefId, _id } = mealData;
-  // console.log(foodName, price, chefId, mealData);
+  const { foodName, price, chefId, _id, chefName, estimatedDeliveryTime } = mealData;
+
   const {register, watch}= useForm();
 // console.log(watch("quantity"));
   const handleOrder = async ()=>{
@@ -21,8 +21,10 @@ const PurchaseModal = ({ closeModal, isOpen, mealData }) => {
         price: totalPrice,
         quantity: Number(quantity),
         chefId,
+        chefName,
         userEmail: user?.email,
         userAddress: address,
+        estimatedDeliveryTime,
         orderStatus: 'pending',
         paymentStatus: 'pending',
       }

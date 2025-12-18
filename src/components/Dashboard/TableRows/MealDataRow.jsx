@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import DeleteModal from '../../Modal/DeleteModal'
-import UpdatePlantModal from '../../Modal/UpdatePlantModal'
+import UpdatePlantModal from '../../Modal/UpdateMealModal'
+import UpdateMealModal from '../../Modal/UpdateMealModal'
 
-const PlantDataRow = () => {
+const MealDataRow = ({meal}) => {
   let [isOpen, setIsOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
@@ -13,6 +14,20 @@ const PlantDataRow = () => {
     setIsOpen(false)
   }
 
+  // mealData
+  const {
+  chefExperience,
+chefId,
+chefName,
+createdAt,
+estimatedDeliveryTime,
+foodImage,
+foodName,
+ingredients,
+price,
+rating, 
+}=meal
+
   return (
     <tr>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -21,7 +36,7 @@ const PlantDataRow = () => {
             <div className='block relative'>
               <img
                 alt='profile'
-                src='https://i.ibb.co.com/rMHmQP2/money-plant-in-feng-shui-brings-luck.jpg'
+                src={foodImage}
                 className='mx-auto object-cover rounded h-10 w-15 '
               />
             </div>
@@ -29,16 +44,25 @@ const PlantDataRow = () => {
         </div>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>Money Plant</p>
+        <p className='text-gray-900 '>{foodName}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>Indoor</p>
+        <p className='text-gray-900 '>{price} TK</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>$120</p>
+        <p className='text-gray-900 '>{rating}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>5</p>
+        <p className='text-gray-900 '>{ingredients.join(',')}</p>
+      </td>
+      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
+        <p className='text-gray-900 '>{estimatedDeliveryTime.minTime} - {estimatedDeliveryTime.maxTime} mins</p>
+      </td>
+      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
+        <p className='text-gray-900 '>{chefName}</p>
+      </td>
+      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
+        <p className='text-gray-900 '>{chefId}</p>
       </td>
 
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -65,7 +89,7 @@ const PlantDataRow = () => {
           ></span>
           <span className='relative'>Update</span>
         </span>
-        <UpdatePlantModal
+        <UpdateMealModal
           isOpen={isEditModalOpen}
           setIsEditModalOpen={setIsEditModalOpen}
         />
@@ -74,4 +98,4 @@ const PlantDataRow = () => {
   )
 }
 
-export default PlantDataRow
+export default MealDataRow

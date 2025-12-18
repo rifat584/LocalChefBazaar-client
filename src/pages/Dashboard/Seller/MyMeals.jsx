@@ -1,6 +1,26 @@
-import PlantDataRow from '../../../components/Dashboard/TableRows/PlantDataRow'
+import { useQuery } from '@tanstack/react-query'
+import PlantDataRow from '../../../components/Dashboard/TableRows/MealDataRow'
+import queryFetch from '../../../utilitis/queryFetch'
+import useAuth from '../../../hooks/useAuth'
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
+import axios from 'axios'
+import MealDataRow from '../../../components/Dashboard/TableRows/MealDataRow'
 
 const MyMeals = () => {
+  const {user}= useAuth();
+// console.log(user?.email);
+  const {data:myMeals=[],  isLoading}= useQuery({
+    queryKey: ['myMeals', user?.email],
+    enabled: !!user?.email,
+    queryFn:async ()=> {
+      const {chefId} = await queryFetch(`user/${user?.email}`);
+      const meals = await  queryFetch(`my-meal/${chefId}`)
+      return meals;
+    }
+  })
+  if(isLoading) return <LoadingSpinner/>
+  console.log(myMeals);
+
   return (
     <>
       <div className='container mx-auto px-4 sm:px-8'>
@@ -14,19 +34,13 @@ const MyMeals = () => {
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Image
+                      Food Image
                     </th>
                     <th
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Name
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
-                      Category
+                     Food Name
                     </th>
                     <th
                       scope='col'
@@ -38,7 +52,31 @@ const MyMeals = () => {
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Quantity
+                      Rating
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
+                    >
+                      Ingredients
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
+                    >
+                      Estimated Delivery Time
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
+                    >
+                      Chef Name
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
+                    >
+                      Chef ID
                     </th>
 
                     <th
@@ -56,7 +94,9 @@ const MyMeals = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <PlantDataRow />
+                  {
+                    myMeals.map(meal=><MealDataRow meal={meal} key={meal._id}/>)
+                  }
                 </tbody>
               </table>
             </div>

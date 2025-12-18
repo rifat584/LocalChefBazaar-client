@@ -32,7 +32,9 @@ const MyOrders = () => {
         </thead>
 
         <tbody>
-          <CustomerOrderDataRow />
+          {
+            orderData.map(order=><CustomerOrderDataRow order={order} key={order._id}/>)
+          }
         </tbody>
       </table>
     </div>
