@@ -21,7 +21,7 @@ const SignUp = () => {
     watch,
     formState: { errors },
   } = useForm();
-  
+
   const password = watch("password");
 
   const registerUserWithEmail = async (data) => {
@@ -37,11 +37,19 @@ const SignUp = () => {
 
       // save user to DB
       const userData = {
-        name, email, profileImage: photo,address, role: "user", status: "active", createdAt: new Date().toISOString
-      }
-      const userDB= await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users`, userData)
+        name,
+        email,
+        profileImage: photo,
+        address,
+        role: "user",
+        status: "active",
+        createdAt: new Date().toISOString,
+      };
+      const userDB = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/users`,
+        userData
+      );
       console.log(userDB);
-
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -52,9 +60,24 @@ const SignUp = () => {
   const handleGoogleSignIn = async () => {
     try {
       //User Registration using google
-      await signInWithGoogle();
+      const res = await signInWithGoogle();
       navigate(from, { replace: true });
       toast.success("Signup Successful");
+      const user = res.user;
+      // save user to DB
+      const userData = {
+        name: user?.displayName,
+        email: user?.email,
+        profileImage: user?.photoURL,
+        address: "N/A",
+        role: "user",
+        status: "active",
+        createdAt: new Date().toISOString,
+      };
+       await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/users`,
+        userData
+      );
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
@@ -136,14 +159,14 @@ const SignUp = () => {
               <input
                 type="text"
                 {...register("address", {
-                  required: { value: true, message: "Please enter your address" }
-                  
+                  required: {
+                    value: true,
+                    message: "Please enter your address",
+                  },
                 })}
                 id="address"
-                
                 placeholder="Enter Your address Here"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900"
-                
               />
               {errors.address && (
                 <p className="text-sm text-error mt-1">
@@ -174,7 +197,6 @@ const SignUp = () => {
                 })}
                 autoComplete="new-password"
                 id="password"
-                
                 placeholder="*******"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900"
               />
@@ -197,10 +219,10 @@ const SignUp = () => {
                     value: true,
                     message: "Please enter the password again",
                   },
-                  validate:value=>value===password || "password do not match"
+                  validate: (value) =>
+                    value === password || "password do not match",
                 })}
                 id="confirm-password"
-                
                 placeholder="*******"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900"
               />
