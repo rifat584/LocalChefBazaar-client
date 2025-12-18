@@ -7,7 +7,7 @@ import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 const MyOrders = () => {
   const { user } = useAuth();
   const { data: orderData, isLoading } = useQuery({
-    queryKey: ["order", user?.email],
+    queryKey: ["myOrders", user?.email],
     enabled: !!user?.email,
     queryFn: () => queryFetch(`order/${user?.email}`),
   });

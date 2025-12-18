@@ -244,6 +244,7 @@ const MealDetails = () => {
         isOpenReview={isOpenReview}
         closeModalReview={closeModalReview}
         id={_id}
+        foodName={foodName}
         refetch={refetch}
       />
       <PurchaseModal

@@ -1,22 +1,33 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
-const UpdateUserRoleModal = ({ isOpen, closeModal, role,email,refetch }) => {
+const UpdateUserRoleModal = ({ isOpen, closeModal, role,email }) => {
   const [updatedRole, setUpdatedRole] = useState(role)
+  const queryClient = useQueryClient();
+
   const handleUserRoleUpdate =async ()=>{
   try {
    await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/user/${email}?role=${updatedRole}`);
-    toast.success(`${email} has been set to ${updatedRole}`)
-    refetch();
   } catch (error) {
-    toast.error(error.message);
+    console.log(error);
   }finally{
     closeModal()
-  }
+  }}
+  
+  const {mutate}= useMutation({
+    mutationFn: handleUserRoleUpdate,
+    onSuccess: ()=>{
+      toast.success(`${email} has been set to ${updatedRole}`);
+      queryClient.invalidateQueries({queryKey: ['users']})
+    },
+    onError: (error)=>{
+      toast.error(error.message);
+    }
+  })
 
-}
   return (
     <>
       <Dialog
@@ -54,7 +65,7 @@ const UpdateUserRoleModal = ({ isOpen, closeModal, role,email,refetch }) => {
                 <div className='flex mt-2 justify-around'>
                   <button
                     type='button'
-                    onClick={handleUserRoleUpdate}
+                    onClick={()=>mutate()}
                     className='cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
                   >
                     Update

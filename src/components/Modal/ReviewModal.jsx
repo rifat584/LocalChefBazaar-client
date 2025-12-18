@@ -5,7 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ReviewModal = ({ isOpenReview, closeModalReview, id , refetch}) => {
+const ReviewModal = ({ isOpenReview, closeModalReview, id ,foodName, refetch}) => {
   const {
     register,
     handleSubmit,
@@ -15,12 +15,14 @@ const ReviewModal = ({ isOpenReview, closeModalReview, id , refetch}) => {
 const {user}= useAuth();
 
   const onReviewSubmit = async (data) => {
+    console.log(data);
     const mealReviewData = {
     reviewerName: user?.displayName,
     reviewerImage: user?.photoURL,
     reviewerEmail: user?.email,
     rating: data?.rating,
     comment: data?.comment,
+    foodName
   };
     try {
       const addToFavList = await axios.post(
@@ -31,12 +33,12 @@ const {user}= useAuth();
         toast.success("Your review has been added");
         refetch()
       }
-      closeModalReview();
-      resetReviewField()
+      
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
-      closeModalReview();
+    } finally{
+closeModalReview();
       resetReviewField()
     }
   };

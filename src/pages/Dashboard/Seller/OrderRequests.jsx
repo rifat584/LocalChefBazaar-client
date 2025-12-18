@@ -9,7 +9,7 @@ const OrderRequests = () => {
 
     const {data:orders, isLoading, refetch}= useQuery(
       {
-        queryKey: ['user', user?.email],
+        queryKey: ['orders', user?.email],
         enabled: !!user?.email,
         queryFn: ()=> queryFetch(`order/${user?.email}`)
       }

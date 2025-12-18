@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UpdateUserRoleModal from "../../Modal/UpdateUserRoleModal";
 
-const UserDataRow = ({ user, refetch }) => {
+const UserDataRow = ({ user }) => {
   let [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
 
@@ -38,7 +38,7 @@ const UserDataRow = ({ user, refetch }) => {
           closeModal={closeModal}
           role="user"
           email={email}
-          refetch={refetch}
+          
         /></>
         }
       </td>

@@ -8,7 +8,7 @@ const ManageUsers = () => {
   const {user}= useAuth();
   const {data:allUsers, isLoading, refetch}= useQuery(
     {
-      queryKey: ['user', user?.email],
+      queryKey: ['users', user?.email],
       enabled: !!user?.email,
       queryFn: ()=>queryFetch(`users`),
     }
